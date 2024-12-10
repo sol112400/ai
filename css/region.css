@@ -1,0 +1,132 @@
+/* 헤더 스타일 */
+header {
+    display: flex;
+    justify-content: center; /* 검색 바를 중앙에 배치 */
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 추가 */
+    position: relative;
+}
+
+/* 로고 스타일 */
+header .logo {
+    position: absolute; /* 로고를 중앙에 배치하지 않도록 절대 위치 설정 */
+    left: 50px; /* 로고를 왼쪽에 고정 */
+    top: 50%; /* 수직 중앙에 배치 */
+    transform: translateY(-50%); /* 정확한 중앙 정렬을 위해 수직 이동 */
+    height: 50px;
+    width: 90px;
+    cursor: pointer;
+}
+
+/* 검색 바 스타일 */
+header .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0; /* 버튼과 입력창 사이 간격 제거 */
+}
+
+header .search-bar input {
+    width: 400px; /* 검색창 너비 */
+    height: 40px;
+    padding: 0 15px;
+    font-size: 16px;
+    border-radius: 20px 0 0 20px; /* 좌측 둥근 모서리 */
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+}
+
+header .search-bar input:focus {
+    box-shadow: 0 0 5px #3e8cc7;
+}
+
+header .search-bar button {
+    width: 50px;
+    height: 42px;
+    background-color: #9ba9b1;
+    color: white;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0 20px 20px 0; /* 우측 둥근 모서리 */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+header .search-bar button:hover {
+    background-color: #3e8cc7;
+}
+
+header .search-bar button i {
+    font-size: 18px; /* 돋보기 아이콘 크기 */
+}
+
+
+/* 테마 버튼 스타일 */
+.theme-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 20px; /* 버튼 간의 간격 추가 */
+}
+
+.theme-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #f1f1f1;
+    color: #333;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-buttons button:hover {
+    background-color: #3e8cc7;
+    color: white;
+}
+
+
+/* 지도 및 리스트 영역 스타일 */
+.container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+#list {
+    width: 30%;
+    overflow-y: auto;
+    height: 500px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+#placesList li {
+    list-style: none;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#placesList li:hover {
+    background-color: #f9f9f9;
+}
+
+#map {
+    width: 65%;
+    height: 500px;
+    border: 1px solid #ddd;
+}
+
+#placeDetail {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}

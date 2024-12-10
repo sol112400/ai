@@ -1,0 +1,331 @@
+html, body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+
+.mypage {
+    display: inline-flex;
+    background-color: #ffffff;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+
+/* top */
+
+  .mypage .tittle {
+    display: flex;
+    padding: 15px 10%;
+    width: 100%;
+    height: 0px;
+  }
+
+  .mypage .logo {
+    width: 120px;
+  }
+  
+  .mypage .top-2 {
+    position: relative;
+    top: 20px;
+    left: 115%;
+    font-weight: 400;
+    color: #191919;
+    font-size: 16px;
+    text-align: center;
+    align-items: center;
+    line-height: 27px;
+  }
+  
+  .mypage .text-wrapper-7 {
+    font-weight: 600;
+  }
+
+  .mypage .text-wrapper-8 a{
+    color: #333;
+  }
+  
+
+/*profile*/
+
+  .mypage .profile {
+    position: relative;
+    width: 100%;
+    top: 100px;
+    left: 10%;
+  }
+  
+  .mypage .background {
+    position: relative;
+    width: 113%;
+    height: 282px;
+    background-color: #fcf9f9;
+    border-radius: 30px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 20px 20px;
+  }
+
+  .mypage .info {
+    position: relative;
+    width: 372px;
+    height: 153px;
+    top: 50px;
+    left: 200px;
+  }
+
+  .mypage .image {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%; /* 원형으로 만들기 */
+    border: 2px solid #d3d3d3; /* 회색 실선 추가 */
+  }
+
+  .mypage .text-wrapper-6 {
+    position: absolute;
+    width: 113px;
+    top: 5px;
+    left: 210px;
+    opacity: 0.5;
+    font-family: "Inter", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 22px;
+  }
+
+  .mypage .name-2 {
+    position: absolute;
+    top: 60px;
+    left: 205px;
+    color: #191919;
+    font-size: 32px;
+    font-family: "Inter", Helvetica;
+    font-weight: 600;
+  }
+  
+  .mypage .mail-2 {
+    position: absolute;
+    top: 100px;
+    left: 210px;
+    opacity: 0.6;
+    font-weight: 400;
+    font-family: "Inter", Helvetica;
+    color: #000000;
+    font-size: 20px;
+  }
+
+   /* 티어 */
+   .mypage .tier {
+    position: absolute;
+    width: 372px;
+    height: 153px;
+    top: 10px;
+    left: 550px;
+  }
+
+  .mypage .text-wrapper-5 {
+    width: 183px;
+    opacity: 0.7;
+    font-weight: 700;
+    color: #000000;
+    font-size: 22px;
+    text-align: center;
+    position: relative;
+    top: 0;
+    left: 0;
+    font-family: "Inter", Helvetica;
+  }
+
+  .mypage .element {
+    position: absolute;
+    width: 59px;
+    height: 63px;
+    top: 30px;
+    left: 0;
+    object-fit: cover;
+  }
+
+  .mypage .level {
+    width: 111px;
+    top: 30px;
+    left: 69px;
+    color: #000000;
+    font-size: 40px;
+    white-space: nowrap;
+    position: absolute;
+    font-family: "Inter", Helvetica;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .mypage .ment {
+    width: 250px;
+    top: 110px;
+    left: -10px;
+    opacity: 0.8;
+    font-weight: 500;
+    position: absolute;
+    font-family: "Inter", Helvetica;
+    color: #000000;
+    font-size: 20px;
+  }
+
+  /* 리뷰수 */
+  
+  .mypage .review {
+    position: relative;
+    width: 100%;
+    height: 153px;
+    top: 0px;
+    left: 330px;
+  }
+
+  .mypage .text-wrapper-3 {
+    width: 160px;
+    opacity: 0.6;
+    font-weight: 600;
+    color: #000000;
+    font-size: 22px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: "Inter", Helvetica;
+  }
+
+  .mypage .carbon-review {
+    position: relative;
+    width: 47px;
+    height: 42px;
+    top: 40px;
+    left: 20px;
+  }
+
+  .mypage .num {
+    position: relative;
+    width: 86px;
+    left: 60px;
+    top: 1px;
+    font-family: "Inter", Helvetica;
+    font-weight: 600;
+    color: #191919;
+    font-size: 30px;
+    text-align: center;
+  }
+
+  /* 평점 */
+  .mypage .rate {
+    position: absolute;
+    width: 100%;
+    height: 153px;
+    top: 0px;
+    left: 180px;
+  }
+  
+  .mypage .vector {
+    position: relative;
+    width: 40px;
+    top: 40px;
+    left: 5px;
+  }
+
+  .mypage .rating {
+    width: 104px;
+    left: 55px;
+    position: relative;
+    top: 5px;
+    font-family: "Inter", Helvetica;
+    font-weight: 600;
+    color: #191919;
+    font-size: 30px;
+    text-align: center;
+  }
+
+
+/*옵션*/
+  
+  .mypage .option {
+    position: relative;
+    width: 1440px;
+  }
+  
+  .mypage .view {
+    position: relative;
+    top: 150px;
+    width: 1350px;
+    left: 250px;
+  }
+
+  .mypage .text-wrapper-2 {
+    height: 80px;
+    font-weight: 600;
+    color: #191919;
+    font-size: 30px;
+    position: relative;
+    top: 20px;
+    left: 50px;
+    font-family: "Inter", Helvetica;
+    line-height: normal;
+  }
+
+  .mypage .text-wrapper-2 a{
+    color: #333;
+  }
+
+  
+/* 프로필 편집 */
+.mypage .div-wrapper {
+  position: relative;
+  width: 1300px;
+  height: 80px;
+}
+
+/* 공지 사항 */
+.mypage .overlap-group-wrapper {
+  position: relative;
+  width: 1300px;
+  height: 80px;
+}
+
+
+/* 이용 문의 */
+.mypage .overlap-wrapper {
+  position: relative;
+  width: 1300px;
+  height: 80px;
+}
+
+/* 회원 탈퇴 */
+.mypage .overlap-group {
+  position: relative;
+  width: 1350px;
+  height: 80px;
+}
+
+.mypage .text-wrapper {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  top: 20px;
+  left: 50px;
+  opacity: 0.6;
+  font-family: "Inter", Helvetica;
+  font-weight: 600;
+  color: #191919;
+  font-size: 30px;
+  line-height: normal;
+}
+
+.mypage .text-wrapper a{
+color: #333;
+}
+
+  /* 경계선 */
+
+.custom-hr {
+  border: none;
+  border-top: 1px solid #d3d3d3;
+}
+  

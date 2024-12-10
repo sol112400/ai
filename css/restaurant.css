@@ -1,0 +1,29 @@
+#restaurant-details {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#restaurant-details h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+#restaurant-details img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+#restaurant-details p {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+#restaurant-details strong {
+    color: #555;
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 페이지</title>
+    <link rel="stylesheet" href="/css/review2.css">
+    <script src="https://kit.fontawesome.com/2a0dea312d.js" crossorigin="anonymous"></script>
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f538f5082fb00e29b016ccd229c60455&libraries=services"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<header>
+    <a href="main.html"><img class="logo" src="/images/seoil.png" /></a>
+</header>
+<body>
+    <h1>리뷰 작성</h1>
+    <div class="restaurant-info" id="restaurantInfo">
+        <p>맛집 정보를 불러오는 중입니다...</p>
+    </div>
+
+    <div class="review-container">
+        <div class="name-2">사용자 닉네임 로딩 중... ㅣ
+        <img class="element" src="/images/bronze.png" />
+        </div>
+        <h2>평점</h2>
+        <div class="star-rating" id="starRating">
+            <span class="star" value="1"> </span>
+            <span class="star" value="2"> </span>
+            <span class="star" value="3"> </span>
+            <span class="star" value="4"> </span>
+            <span class="star" value="5"> </span>
+        </div>
+        <textarea id="reviewContent" placeholder="리뷰를 작성해주세요"></textarea>
+        <button id="submitReview">리뷰 등록</button>
+    </div>
+
+    <h2>리뷰 목록</h2>
+    <div class="review-list" id="reviewList">
+        <p>등록된 리뷰가 없습니다.</p>
+    </div>
+
+    <script>
+        // 맛집 데이터 로딩
+        const restaurantInfo = document.getElementById("restaurantInfo");
+        const reviewList = document.getElementById("reviewList");
+
+        // URL에서 restaurants_id 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const restaurantsId = parseInt(urlParams.get('restaurants_id'), 10);
+
+        let selectedRestaurant = null;
+
+        // 맛집 정보 불러오기
+        fetch(`/api/restaurants/${restaurantsId}`)
+            .then(response => response.json())
+            .then(data => {
+                selectedRestaurant = data;
+
+                if (selectedRestaurant) {
+                    restaurantInfo.innerHTML = `
+                        <strong>${selectedRestaurant.name}</strong>
+                        <p><strong>평점:</strong> ${selectedRestaurant.rating}</p>
+                        <p><strong>리뷰 수:</strong> ${selectedRestaurant.review_count}</p>
+                    `;
+                    renderReviews();  // 리뷰 목록 초기화
+                } else {
+                    restaurantInfo.innerHTML = "<p>해당 맛집 정보를 찾을 수 없습니다.</p>";
+                }
+            })
+            .catch(error => {
+                console.error("맛집 정보 불러오기 오류:", error);
+                alert("맛집 정보를 불러오지 못했습니다.");
+            });
+
+        // 별점 클릭 이벤트
+        let selectedRating = 0;
+        $('.star-rating > .star').click(function() {
+            selectedRating = parseInt($(this).attr('value'));
+            $(this).parent().children('span').removeClass('on');
+            $(this).addClass('on').prevAll('span').addClass('on');
+        });
+
+        // 리뷰 등록
+        const reviewContent = document.getElementById("reviewContent");
+
+        document.getElementById("submitReview").addEventListener("click", () => {
+            if (!selectedRating || !reviewContent.value.trim()) {
+                alert("평점과 리뷰 내용을 입력해주세요!");
+                return;
+            }
+
+            const newReview = {
+                rating: selectedRating,
+                content: reviewContent.value.trim(),
+                date: new Date().toLocaleString(),
+            };
+
+            // 서버에 리뷰 데이터 전송
+            fetch(`/api/reviews`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    restaurants_id: selectedRestaurant.restaurants_id,
+                    rating: newReview.rating,
+                    content: newReview.content,
+                    date: newReview.date,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                selectedRestaurant.reviews.push(data);  // 서버에서 반환된 새 리뷰 추가
+                reviewContent.value = ""; // 입력 필드 초기화
+                selectedRating = 0; // 평점 초기화
+                $('.star').removeClass('on'); // 별점 초기화
+                renderReviews(); // 리뷰 목록 업데이트
+            })
+            .catch(error => {
+                console.error("리뷰 등록 실패:", error);
+                alert("리뷰 등록에 실패했습니다.");
+            });
+        });
+
+        // 리뷰 표시
+        function renderReviews() {
+            if (!selectedRestaurant || selectedRestaurant.reviews.length === 0) {
+                reviewList.innerHTML = "<p>등록된 리뷰가 없습니다.</p>";
+                return;
+            }
+
+            reviewList.innerHTML = selectedRestaurant.reviews.map(r => `
+                <div class="review-item">
+                    <div class="header">${r.user} | 평점: ${r.rating}</div>
+                    <div class="content">${r.content}</div>
+                    <div class="date">${r.date}</div>
+                </div>
+            `).join("");
+        }
+
+        // 사용자 닉네임
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("/api/user")
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("사용자 정보를 가져오지 못했습니다.");
+                    }
+                    return response.json();
+                })
+                .then((user) => {
+                    // 상단 사용자 정보 업데이트
+                    const topText = document.querySelector(".name-2");
+                    topText.innerHTML = `
+                        <span class="text-wrapper-7">${user.nickname} 님</span>
+                    `;
+                })
+                .catch((error) => {
+                    console.error("사용자 정보를 불러오지 못했습니다:", error);
+                    alert("사용자 정보를 불러오지 못했습니다.");
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마이 페이지</title>
+    <link rel="stylesheet" href="/css/mypage2.css" />
+    <link rel="stylesheet" href="/css/mypage.css" />
+    <script defer src="/js/mypage.js"></script>
+  </head>
+  <body>
+    <div class="mypage">
+      <div class="div">
+        <!--top-->
+        <div class="tittle">
+          <a href="/main.html"><img class="logo" src="/images/seoil.png" /></a>
+          <!-- 사용자 정보 및 로그아웃 -->
+          <p class="top-2"></p>
+        </div>
+        <!--profile-->
+        <div class="profile">
+          <section class="background">
+            <div class="info">
+              <!-- 프로필 사진 -->
+              <img class="image" id="profile-photo" src="/images/Unknown.jpg" />
+              <div class="text-wrapper-6">MyPage</div>
+              <div class="name-2">사용자 닉네임 로딩 중...</div>
+              <a href="mailto:test01@gmail.com" target="_blank" rel="noopener noreferrer">
+                <div class="mail-2">이메일 로딩 중...</div>
+              </a>
+              <div class="tier">
+                <div class="text-wrapper-5">나의 티어는?</div>
+                <img class="element" src="images/bronze.png" />
+                <div class="level">티어 로딩 중...</div>
+                <p class="ment">리뷰 3개만 더 쓰면 승급!</p>
+                <div class="review">
+                  <div class="text-wrapper-3">리뷰 수</div>
+                  <img
+                    class="carbon-review"
+                    src="https://c.animaapp.com/Wc8SbDWM/img/carbon-review.svg"
+                  />
+                  <div class="num">0개</div>
+                  <div class="rate">
+                    <div class="text-wrapper-3">평균 평점</div>
+                    <img
+                      class="vector"
+                      src="https://c.animaapp.com/Wc8SbDWM/img/vector.svg"
+                    />
+                    <div class="rating">0점</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <!--옵션-->
+        <div class="option">
+          <div class="view">
+            <hr class="custom-hr" />
+            <a href="/editprofile.html">
+              <div class="div-wrapper">
+                <div class="overlap-group">
+                  <div class="text-wrapper-2">프로필 편집</div>
+                </div>
+              </div>
+            </a>
+            <hr class="custom-hr" />
+            <a href="/notice.html">
+              <div class="overlap-group-wrapper">
+                <div class="overlap-group">
+                  <div class="text-wrapper-2">공지 사항</div>
+                </div>
+              </div>
+            </a>
+            <hr class="custom-hr" />
+            <a href="/inquiry.html">
+              <div class="overlap-wrapper">
+                <div class="overlap-group">
+                  <div class="text-wrapper-2">이용 문의</div>
+                </div>
+              </div>
+            </a>
+            <hr class="custom-hr" />
+            <!-- 회원탈퇴 링크 -->
+            <a href="javascript:void(0);" id="deleteAccountLink">
+              <div class="overlap-group-wrapper">
+                <div class="overlap-group">
+                  <div class="text-wrapper-2">회원탈퇴</div>
+                </div>
+              </div>
+            </a>
+            <hr class="custom-hr" />
+          </div>
+        </div>
+      </div>
+      <!-- 사용자 정보 및 로그아웃 관련 스크립트 -->
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          fetch("/api/user")
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("사용자 정보를 가져오지 못했습니다.");
+              }
+              return response.json();
+            })
+            .then((user) => {
+              // 프로필 사진 업데이트
+              const profilePhoto = document.getElementById("profile-photo");
+              if (user.picture) {
+                profilePhoto.src = user.picture; // 프로필 사진 URL 반영
+              }
+
+              // 프로필 정보 업데이트
+              document.querySelector(".name-2").textContent = `${user.nickname} 님`;
+              document.querySelector(".mail-2").textContent = user.email;
+
+              // 티어 및 리뷰 수 업데이트
+              document.querySelector(".level").textContent = user.tier || "티어 없음";
+              document.querySelector(".num").textContent = `${user.review_count || 0}개`;
+
+              // 승급 조건 메시지 업데이트
+              const ment = document.querySelector(".ment");
+              if (user.review_count >= 10) {
+                ment.textContent = "축하합니다! 승급 조건을 충족했습니다!";
+              } else {
+                ment.textContent = `리뷰 ${10 - user.review_count}개만 더 쓰면 승급!`;
+              }
+
+              // 상단 사용자 정보 업데이트
+              const topText = document.querySelector(".top-2");
+              topText.innerHTML = `
+                <span class="text-wrapper-7">${user.nickname} 님</span>
+                <span class="text-wrapper-8">ㅣ <a href="javascript:void(0);" id="logout-link">로그아웃</a></span>
+              `;
+              addLogoutEvent(); // 로그아웃 이벤트 핸들러 추가
+            })
+            .catch((error) => {
+              console.error("사용자 정보를 불러오지 못했습니다:", error);
+              alert("사용자 정보를 불러오지 못했습니다.");
+            });
+        });
+
+        // 로그아웃 이벤트 바인딩
+        function addLogoutEvent() {
+          const logoutLink = document.getElementById("logout-link");
+          if (logoutLink) {
+            logoutLink.addEventListener("click", () => {
+              fetch("/logout")
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("로그아웃 실패");
+                  }
+                  return response.json();
+                })
+                .then((data) => {
+                  alert(data.message);
+                  window.location.href = "/"; // 메인 페이지로 이동
+                })
+                .catch((error) => {
+                  console.error("로그아웃 처리 중 오류:", error);
+                  alert("로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.");
+                });
+            });
+          }
+        }
+      </script>
+    </div>
+  </body>
+</html>

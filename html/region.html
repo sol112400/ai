@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지역별 맛집</title>
+    <link rel="stylesheet" href="/css/region.css">
+    <script src="https://kit.fontawesome.com/2a0dea312d.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <a href="main.html">
+            <img class="logo" src="/images/seoil.png" alt="로고">
+        </a>
+        <div class="search-bar">
+            <input type="text" id="keyword" placeholder="검색어를 입력하세요">
+            <button type="button" class="search-button" onclick="search()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="theme-buttons">
+        <button onclick="searchByTheme('사가정 맛집')">사가정</button>
+        <button onclick="searchByTheme('면목 맛집')">면목</button>
+        <button onclick="searchByTheme('서일대 맛집')">서일대</button>
+    </div>
+
+    <div class="container">
+        <div id="list">
+            <ul id="placesList"></ul>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <div id="placeDetail" style="padding: 10px; border: 1px solid #ddd; margin-top: 10px;">
+        <h3>선택한 장소 정보</h3>
+        <div id="placeInfo"></div>
+    </div>
+
+
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f538f5082fb00e29b016ccd229c60455&libraries=services"></script>
+    <script>
+        var markers = [];
+        var mapContainer = document.getElementById('map');
+        var mapOption = {
+            center: new kakao.maps.LatLng(37.58622, 127.09775), // 서일대학교 중심
+            level: 3
+        };
+
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+        var mapTypeControl = new kakao.maps.MapTypeControl();
+        map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+        // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성합니다
+        var zoomControl = new kakao.maps.ZoomControl();
+        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+        var ps = new kakao.maps.services.Places();
+        var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const keyword = urlParams.get('keyword');
+            if (keyword) {
+                document.getElementById('keyword').value = keyword;
+                searchPlaces(keyword);
+            }
+        });
+
+        function searchPlaces(keywordFromInput = null) {
+            const keyword = keywordFromInput || document.getElementById('keyword').value.trim();
+            if (!keyword) {
+                alert('검색어를 입력해주세요!');
+                return;
+            }
+
+            ps.keywordSearch(keyword, placesSearchCB, {
+                location: new kakao.maps.LatLng(37.58622, 127.09775),
+                radius: 4000
+            });
+        }
+
+        function searchByTheme(theme) {
+            searchPlaces(theme);
+        }
+
+        function placesSearchCB(data, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                displayPlaces(data);
+            } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+                alert('검색 결과가 없습니다.');
+            } else {
+                alert('검색 중 오류가 발생했습니다.');
+            }
+        }
+
+        function displayPlaces(places) {
+    var listEl = document.getElementById('placesList');
+    var bounds = new kakao.maps.LatLngBounds();
+    removeAllChildNodes(listEl);
+    removeMarker();
+
+    for (var i = 0; i < places.length; i++) {
+        var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);
+        var marker = addMarker(placePosition);
+        var itemEl = createListItem(i, places[i], marker);
+
+        // 마커와 목록 클릭 이벤트에 정보 표시 추가
+        (function(marker, place) {
+            itemEl.onclick = function() {
+                displayInfowindow(marker, place.place_name, place.road_address_name || place.address_name);
+                displayPlaceDetail(place); // 상세 정보 표시
+                map.panTo(marker.getPosition());
+            };
+        })(marker, places[i]);
+
+        listEl.appendChild(itemEl);
+        bounds.extend(placePosition);
+    }
+
+    map.setBounds(bounds);
+}
+
+function displayPlaceDetail(place) {
+    var placeInfo = document.getElementById('placeInfo');
+    placeInfo.innerHTML = `
+        <strong>${place.place_name}</strong><br>
+        <span>주소: ${place.road_address_name || place.address_name}</span><br>
+        <span>전화번호: ${place.phone || '정보 없음'}</span><br>
+        <span>카테고리: ${place.category_name || '정보 없음'}</span><br>
+        <a href="${place.place_url}" target="_blank">자세히 보기</a>
+    `;
+}
+
+
+        function createListItem(index, place, marker) {
+            var el = document.createElement('li');
+            el.innerHTML = `
+                <div class="name">${place.place_name}</div>
+                <div class="address">${place.road_address_name || place.address_name}</div>
+            `;
+            return el;
+        }
+
+        function addMarker(position) {
+            var marker = new kakao.maps.Marker({
+                position: position,
+                map: map
+            });
+            markers.push(marker);
+            return marker;
+        }
+
+        function displayInfowindow(marker, placeName, address) {
+            var content = `
+                <div style="padding:5px;">
+                    <strong>${placeName}</strong><br>
+                    ${address || '주소 정보 없음'}
+                </div>
+            `;
+            infowindow.setContent(content);
+            infowindow.open(map, marker);
+        }
+        function removeMarker() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+        }
+
+        function removeAllChildNodes(el) {
+            while (el.firstChild) {
+                el.removeChild(el.firstChild);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>로그인 페이지</title>
+    <link rel="stylesheet" href="/css/login2.css" />
+    <link rel="stylesheet" href="/css/login.css" />
+    <script defer src="/js/login.js"></script> <!-- JavaScript 파일 추가 -->
+  </head>
+  <body>
+    <div class="element">
+      <div class="overlap-group">
+        <div class="title">
+          <a href="main.html">
+            <img class="img" src="/images/biglogo.png" alt="사이트 로고" />
+          </a>
+        </div>
+        <div class="log-in">
+          <form id="login-form">
+            <div class="frame">
+              <div class="div">
+                <div class="frame-wrapper">
+                  <div class="frame-2">
+                    <!-- 아이디 입력 필드 -->
+                    <div class="text-field-wrapper">
+                      <div class="text-field">
+                        <input id="username" class="inputs" type="text" placeholder="아이디 입력" required />
+                      </div>
+                    </div>
+                    <!-- 비밀번호 입력 필드 -->
+                    <div class="text-field-wrapper">
+                      <div class="text-field">
+                        <input id="password" class="inputs" type="password" placeholder="비밀번호 입력" required />
+                      </div>
+                    </div>
+                    <!-- 로그인 버튼 -->
+                    <div class="button-wrapper">
+                      <button id="login-button" class="button" type="submit">
+                        <div class="frame-3">
+                          <div class="sign-up">로그인</div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- 로그인 결과 메시지 -->
+                <p id="login-message" class="message"></p>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="frame-4">
+          <div class="have-an-account">
+            <div class="already-have-an">
+              <a href="signup.html">회원가입</a>
+            </div>
+          </div>
+          <div class="rectangle">
+            <div class="rectangle-2"></div>
+          </div>
+          <div class="have-an-account">
+            <div class="already-have-an-2"><a href="foundid.html">아이디 찾기</a></div>
+          </div>
+          <div class="rectangle">
+            <div class="rectangle-2"></div>
+          </div>
+          <div class="have-an-account">
+            <div class="already-have-an-2"><a href="foundpw.html">비밀번호 찾기</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

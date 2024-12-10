@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 작성</title>
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+        h1, h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .info {
+            margin-bottom: 20px;
+        }
+        .info span {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .star-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .star {
+            font-size: 30px;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .star.selected {
+            color: gold;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        textarea {
+            resize: none;
+            width: 100%;
+            height: 150px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .reviews {
+            margin-top: 40px;
+        }
+        .review-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .review-item .review-header {
+            font-size: 16px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .review-item .review-content {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .review-item .review-date {
+            font-size: 12px;
+            color: gray;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>리뷰 작성</h1>
+    <div class="info">
+        <span id="restaurantName">맛집 이름: 로딩 중...</span>
+        <span id="restaurantRating">평점: 로딩 중...</span>
+        <span id="restaurantReviews">리뷰 수: 로딩 중...</span>
+        <span id="nickname">닉네임: 로딩 중...</span>
+    </div>
+
+    <form id="reviewForm">
+        <div class="star-rating" id="starRating">
+            ★★★★★
+        </div>
+        <textarea name="content" id="reviewContent" placeholder="리뷰를 작성해주세요"></textarea>
+        <input type="file" name="image" id="reviewImage" accept="image/*" style="margin-bottom: 20px;">
+        <button type="submit">등록</button>
+    </form>
+
+    <h2>등록된 리뷰</h2>
+    <div class="reviews" id="reviewList">등록된 리뷰가 없습니다.</div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const restaurantsId = urlParams.get('restaurants_id');
+        let selectedRating = 0;
+
+        // 별점 UI 설정
+        const starContainer = document.getElementById('starRating');
+        starContainer.innerHTML = '★'.repeat(5);
+        starContainer.addEventListener('click', (e) => {
+            const stars = [...starContainer.textContent];
+            const index = stars.indexOf(e.target.textContent) + 1;
+            selectedRating = index;
+            starContainer.innerHTML = stars.map((_, i) => i < index ? '★' : '☆').join('');
+        });
+
+        // 맛집 정보 및 사용자 닉네임 가져오기
+        async function fetchInfo() {
+            try {
+                const [restaurantRes, userRes] = await Promise.all([
+                    fetch(`http://localhost:3000/api/restaurant/${restaurantsId}`),
+                    fetch('http://localhost:3000/api/user') // 사용자 정보를 가져오는 API
+                ]);
+
+                const restaurant = await restaurantRes.json();
+                const user = await userRes.json();
+
+                document.getElementById('restaurantName').textContent = `맛집 이름: ${restaurant.name}`;
+                document.getElementById('restaurantRating').textContent = `평점: ${restaurant.rating}`;
+                document.getElementById('restaurantReviews').textContent = `리뷰 수: ${restaurant.review}`;
+                document.getElementById('nickname').textContent = `닉네임: ${user.nickname}`;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // 리뷰 제출
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('restaurants_id', restaurantsId);
+            formData.append('rating', selectedRating);
+            formData.append('content', document.getElementById('reviewContent').value);
+            formData.append('image', document.getElementById('reviewImage').files[0]);
+
+            try {
+                const response = await fetch('http://localhost:3000/api/review', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('관리자 검토 후 등록이 완료됩니다.');
+                    document.getElementById('reviewContent').value = '';
+                    document.getElementById('reviewImage').value = '';
+                    fetchReviews(); // 새 리뷰를 다시 가져오기
+                } else {
+                    alert('리뷰 등록에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error submitting review:', error);
+            }
+        });
+
+        // 리뷰 목록 가져오기
+        async function fetchReviews() {
+            try {
+                const response = await fetch(`http://localhost:3000/api/reviews?restaurants_id=${restaurantsId}`);
+                const reviews = await response.json();
+
+                const reviewList = document.getElementById('reviewList');
+                reviewList.innerHTML = reviews.map(review => `
+                    <div class="review-item">
+                        <div class="review-header">작성자: ${review.user_id} | 평점: ${review.rating}</div>
+                        <div class="review-content">${review.content}</div>
+                        <div class="review-date">${review.created_at}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching reviews:', error);
+            }
+        }
+
+        // 초기화
+        fetchInfo();
+        fetchReviews();
+    </script>
+</body>
+</html>

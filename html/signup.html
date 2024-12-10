@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 페이지</title>
+    <link rel="stylesheet" href="/css/signup2.css" />
+    <link rel="stylesheet" href="/css/signup.css" />
+    <script defer src="/js/signup.js"></script>
+  </head>
+
+  <body>
+    <div class="element">
+      <div class="overlap-group">
+        <div class="title">
+          <a href="#">
+            <img class="img" src="/images/biglogo.png">
+          </a>
+        </div>
+        <div class="create-an-account">
+          <form action="/signup" method="POST">
+            <div class="content">
+              <hr />
+              <div class="view">
+                <div class="text-wrapper">회원가입</div>
+              </div>
+              <div class="div">
+                <!-- 아이디 입력 칸 -->
+                <div class="text-field">
+                  <input id="user_id" class="inputs" type="text" placeholder="아이디 입력" />
+                  <button class="button duplicate-check" id="check-duplicate" type="button">중복 검사</button>
+                </div>
+                <p id="username-message" class="message"></p> <!-- 중복 검사 메시지 -->
+                
+                <!-- 이메일 -->
+                <div class="text-field">
+                  <input class="inputs" id="email" type="email" placeholder="이메일 입력" />
+                </div>
+                <p id="email-message" class="message"></p>
+
+                <!-- 비밀번호 -->
+                <div class="text-field">
+                  <input class="inputs" id="password" type="password" placeholder="비밀번호 입력" />
+                </div>
+
+                <!-- 비밀번호 확인 -->
+                <div class="text-field">
+                  <input class="inputs" id="confirm-password" type="password" placeholder="비밀번호 확인" />
+                </div>
+                <p id="password-message" class="message"></p> <!-- 비밀번호 확인 메시지 -->
+
+                <!-- 이름과 닉네임 -->
+                <div class="text-field-container">
+                  <div class="text-field-wrapper">
+                    <input class="inputs" id="username" type="text" placeholder="이름 입력" />
+                  </div>
+                  <div class="text-field-wrapper">
+                    <input class="inputs" id="nickname" type="text" placeholder="닉네임 입력" />
+                  </div>
+                </div>
+
+                <!-- 가입 버튼 -->
+                <div class="button-wrapper">
+                  <button class="frame-wrapper" id="signup-button" type="submit">
+                    <div class="frame-2">
+                      <div class="sign-up-2">가입하기</div>
+                    </div>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <p id="signup-message" class="message"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

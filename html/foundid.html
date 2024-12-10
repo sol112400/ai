@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>id 찾기 페이지</title>
+    <link rel="stylesheet" href="/css/foundid.css" />
+  </head>
+  <body>
+    <div class="found">
+        <!--top-->
+        <div class="tittle">
+            <a href="/main.html"><img class="logo" src="/images/seoil.png" /></a>
+            <p class="top-2">
+              <span class="text-wrapper-8"><a href="login.html">로그인</a></span>
+            </p>
+        </div>
+
+        <div class="profile-edit-container">
+          <h1>아이디 찾기</h1>
+          <p class="com">회원가입 시 입력한 이메일 주소를 통해 아이디를 전송합니다.</p>
+
+           <!-- 입력 칸 -->
+           <div id="password-reset-section">
+            <form id="email-form">
+              <div class="form-group">
+                <label for="email">이메일 입력</label>
+                <input type="email" id="email" placeholder="이메일 입력" required>
+              </div>
+              <button type="submit" class="btn save-btn">전송</button>
+            </form>
+            <p id="result"></p> <!-- 결과 출력 영역 -->
+          </div>
+        </div>
+    </div>
+
+    <script>
+      document.getElementById('email-form').addEventListener('submit', async (e) => {
+          e.preventDefault(); // 폼 기본 동작 방지
+          const email = document.getElementById('email').value;
+
+          try {
+              const response = await fetch('http://localhost:3000/find-user', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ email }),
+              });
+
+              const data = await response.json();
+              if (data.success) {
+                  document.getElementById('result').innerText =
+                      `사용자의 ID는 ${data.user_id} 입니다.`; // 사용자 ID만 표시
+              } else {
+                  document.getElementById('result').innerText = data.message;
+              }
+          } catch (error) {
+              document.getElementById('result').innerText = '오류가 발생했습니다.';
+              console.error(error);
+          }
+      });
+    </script>
+  </body>
+</html>
